@@ -1,5 +1,5 @@
 <?php
-namespace SonnyBlaine\RoveretiBridge;
+namespace SonnyBlaine\SAPBridge;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;

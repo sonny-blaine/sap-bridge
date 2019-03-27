@@ -1,5 +1,5 @@
 <?php
-use SonnyBlaine\RoveretiBridge\SAPBridgeProvider;
+use SonnyBlaine\SAPBridge\SAPBridgeProvider;
 
 return [
     SAPBridgeProvider::class,

@@ -1,6 +1,6 @@
 <?php
 
-namespace SonnyBlaine\RoveretiBridge;
+namespace SonnyBlaine\SAPBridge;
 
 use GuzzleHttp\Client as GuzzleClient;
 use SonnyBlaine\IntegratorBridge\BridgeInterface;
