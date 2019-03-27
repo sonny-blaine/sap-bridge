@@ -1,7 +1,7 @@
 {
     "name": "sonny-blaine/sap-bridge",
     "description": "Bridge to integrate with SAP",
-    "type": "project",
+    "type": "library",
     "require": {
         "php": ">=7.1",
         "sonny-blaine/integrator-bridge": ">=1.0",
