@@ -23,10 +23,8 @@ class SAPBridge implements BridgeInterface
     /**
      * SAPBridge constructor.
      * @param string $baseUri
-     * @param string $user
-     * @param int $key
      */
-    public function __construct(string $baseUri/*, string $user, int $key*/)
+    public function __construct(string $baseUri)
     {
         $this->client = new GuzzleClient(['base_uri' => $baseUri]);
     }
