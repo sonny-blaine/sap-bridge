@@ -17,7 +17,9 @@ class SAPBridgeProvider implements ServiceProviderInterface
     {
         $app['sap.bridge'] = function ($app) {
             return new SAPBridge(
-                getenv('SAP_BASE_URI')
+                getenv('SAP_BASE_URI'),
+                getenv('SAP_AUTH_USER'),
+                getenv('SAP_AUTH_PASSWORD')
             );
         };
     }
