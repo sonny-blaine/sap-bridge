@@ -12,7 +12,7 @@ use SonnyBlaine\IntegratorBridge\RequestInterface;
  */
 class SAPBridge implements BridgeInterface
 {
-    const URI_ENVIAR_CLIENTE = '';
+    const URI_ENVIAR_CLIENTE = 'BP';
 
     /**
      * Client to integrate
