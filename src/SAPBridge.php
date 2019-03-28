@@ -21,12 +21,20 @@ class SAPBridge implements BridgeInterface
     protected $client;
 
     /**
+     * @var array
+     */
+    protected $auth;
+
+    /**
      * SAPBridge constructor.
      * @param string $baseUri
+     * @param string $user
+     * @param string $password
      */
-    public function __construct(string $baseUri)
+    public function __construct(string $baseUri, string $user, string $password)
     {
         $this->client = new GuzzleClient(['base_uri' => $baseUri]);
+        $this->auth = [$user, $password];
     }
 
     /**
@@ -42,7 +50,8 @@ class SAPBridge implements BridgeInterface
                 $this->client->post(
                     self::URI_ENVIAR_CLIENTE,
                     [
-                        'json' => $this->getClienteData($request->getData())
+                        'json' => $this->getClienteData($request->getData()),
+                        'auth' => $this->auth,
                     ]
                 );
                 break;
