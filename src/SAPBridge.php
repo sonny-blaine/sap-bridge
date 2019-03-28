@@ -124,6 +124,7 @@ class SAPBridge implements BridgeInterface
                 'bpext' => $cliente->codigo,
                 'kunnr' => '',
                 'name_org' => $cliente->nome,
+                'name_org4' => 'CNPJ' === $cliente->documentoTipo ? $cliente->nomeTratamento : '',
                 'sort1' => $cliente->documentoNumero,
                 'sort2' => $cliente->nomeTratamento,
                 'street' => $cliente->enderecoLogradouro,
