@@ -3,6 +3,7 @@
 namespace SonnyBlaine\SAPBridge;
 
 use GuzzleHttp\Client as GuzzleClient;
+use Psr\Http\Message\ResponseInterface;
 use SonnyBlaine\IntegratorBridge\BridgeInterface;
 use SonnyBlaine\IntegratorBridge\RequestInterface;
 
@@ -40,24 +41,65 @@ class SAPBridge implements BridgeInterface
     /**
      * Integrates a requisition
      * @param RequestInterface $request
-     * @throws \Exception
      * @return void
+     * @throws \Exception
      */
     public function integrate(RequestInterface $request): void
     {
         switch ($request->getMethodIdentifier()) {
             case 'EnviarCliente':
-                $this->client->post(
-                    self::URI_ENVIAR_CLIENTE,
-                    [
-                        'json' => $this->getClienteData($request->getData()),
-                        'auth' => $this->auth,
-                    ]
-                );
+                $response = $this->post(self::URI_ENVIAR_CLIENTE, $this->getClienteData($request->getData()));
+                $this->checkResponse($response);
                 break;
 
             default:
                 throw new \Exception("Error: Method undefined.");
+        }
+    }
+
+    /**
+     * @param $uri
+     * @param $data
+     * @return ResponseInterface
+     */
+    private function post($uri, $data)
+    {
+        return $this->client->post($uri, [
+            'json' => $data,
+            'auth' => $this->auth,
+        ]);
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @throws \Exception
+     */
+    private function checkResponse(ResponseInterface $response)
+    {
+        $responseData = json_decode($response->getBody(), true);
+
+        if ('sucesso' === $responseData['dados']['status']) {
+            return;
+        }
+
+        $failures = '';
+
+        $detalhes = $responseData['dados']['detalhes'];
+
+        if (false === array_key_exists('0', $detalhes)) {
+            $detalhes = [$detalhes];
+        }
+
+        foreach ($detalhes as $detalhe) {
+            if ('S' === $detalhe['tipo']) {
+                continue;
+            }
+
+            $failures .= $detalhe['mensagem'] . ';' . PHP_EOL;
+        }
+
+        if (false === empty($failures)) {
+            throw new \Exception(utf8_decode($failures));
         }
     }
 
