@@ -13,7 +13,7 @@ use SonnyBlaine\IntegratorBridge\RequestInterface;
  */
 class SAPBridge implements BridgeInterface
 {
-    const URI_ENVIAR_CLIENTE = 'BP';
+    const URI_SEND_BUSINESS_PARTNER = 'BP001_CadastraBP';
 
     /**
      * Client to integrate
@@ -47,8 +47,8 @@ class SAPBridge implements BridgeInterface
     public function integrate(RequestInterface $request): void
     {
         switch ($request->getMethodIdentifier()) {
-            case 'EnviarCliente':
-                $response = $this->post(self::URI_ENVIAR_CLIENTE, $this->getClienteData($request->getData()));
+            case 'EnviarBusinessPartner':
+                $response = $this->post(self::URI_SEND_BUSINESS_PARTNER, $this->getBusinessPartnerData($request->getData()));
                 $this->checkResponse($response);
                 break;
 
@@ -113,48 +113,65 @@ class SAPBridge implements BridgeInterface
     }
 
     /**
-     * @param \stdClass $cliente
+     * @param \stdClass $businessPartner
      * @return array
      */
-    private function getClienteData(\stdClass $cliente)
+    private function getBusinessPartnerData(\stdClass $businessPartner)
     {
         $dados = [
-            'altkn' => $cliente->codigo,
+            'altkn' => $businessPartner->codigo,
             'dados_gerais' => [
-                'bpext' => $cliente->codigo,
+                'bpext' => $businessPartner->codigo,
                 'kunnr' => '',
-                'name_org' => $cliente->nome,
-                'name_org4' => 'CNPJ' === $cliente->documentoTipo ? $cliente->nomeTratamento : '',
-                'sort1' => $cliente->documentoNumero,
-                'sort2' => $cliente->nomeTratamento,
-                'street' => $cliente->enderecoLogradouro,
-                'house_num1' => $cliente->enderecoNumero,
-                'post_code1' => $cliente->enderecoCep,
-                'cod_municipio' => $cliente->enderecoCodigoMunicipio,
-                'city2' => $cliente->enderecoBairro,
-                'city1' => $cliente->enderecoCidade,
-                'country' => $cliente->pais,
-                'region' => $cliente->enderecoUf,
-                'telf1' => $cliente->telefone,
-                'telf2' => $cliente->telefone2,
+                'name_org' => $businessPartner->nome,
+                'name_org4' => $this->isFornecedor($businessPartner->documentoTipo) ? $businessPartner->nomeTratamento : '',
+                'sort1' => $businessPartner->documentoNumero,
+                'sort2' => $businessPartner->nomeTratamento,
+                'street' => $businessPartner->enderecoLogradouro,
+                'house_num1' => $businessPartner->enderecoNumero,
+                'post_code1' => $businessPartner->enderecoCep,
+                'cod_municipio' => $businessPartner->enderecoCodigoMunicipio,
+                'city2' => $businessPartner->enderecoBairro,
+                'city1' => $businessPartner->enderecoCidade,
+                'country' => $businessPartner->pais,
+                'region' => $businessPartner->enderecoUf,
+                'telf1' => $businessPartner->telefone,
+                'telf2' => $businessPartner->telefone2,
                 'telfx' => '',
-                'smtp_addr' => $cliente->email
+                'smtp_addr' => $businessPartner->email
             ],
             'dados_identificacao' => [
                 [
-                    'taxtype' => $cliente->documentoTipo,
-                    'taxnum' => $cliente->documentoNumero,
+                    'taxtype' => $businessPartner->documentoTipo,
+                    'taxnum' => $businessPartner->documentoNumero,
                 ]
-            ]
+            ],
+            'dados_cliente' => [],
+            'dados_fornecedor' => [],
         ];
 
-        if (false === empty($cliente->inscricaoEstadual)) {
+        if (false === empty($businessPartner->inscricaoEstadual)) {
             $dados['dados_identificacao'][] = [
                 'taxtype' => 'IE',
-                'taxnum' => $cliente->inscricaoEstadual,
+                'taxnum' => $businessPartner->inscricaoEstadual,
             ];
         }
 
+        if ($this->isFornecedor($businessPartner->documentoTipo)) {
+            $dados['dados_fornecedor']['fornecedor'] = 'true';
+        } else {
+            $dados['dados_cliente']['cliente'] = 'true';
+        }
+
         return ['dados' => [$dados]];
+    }
+
+    /**
+     * @param string $documentoTipo
+     * @return bool
+     */
+    private function isFornecedor(string $documentoTipo)
+    {
+        return 'CNPJ' === $documentoTipo;
     }
 }
