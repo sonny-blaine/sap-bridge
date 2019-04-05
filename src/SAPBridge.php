@@ -5,7 +5,8 @@ namespace SonnyBlaine\SAPBridge;
 use GuzzleHttp\Client as GuzzleClient;
 use Psr\Http\Message\ResponseInterface;
 use SonnyBlaine\IntegratorBridge\BridgeInterface;
-use SonnyBlaine\IntegratorBridge\RequestInterface;
+use SonnyBlaine\IntegratorBridge\IntegrateRequestInterface;
+use SonnyBlaine\IntegratorBridge\SearchRequestInterface;
 
 /**
  * Class SAPBridge
@@ -40,11 +41,11 @@ class SAPBridge implements BridgeInterface
 
     /**
      * Integrates a requisition
-     * @param RequestInterface $request
+     * @param IntegrateRequestInterface $request
      * @return void
      * @throws \Exception
      */
-    public function integrate(RequestInterface $request): void
+    public function integrate(IntegrateRequestInterface $request): void
     {
         switch ($request->getMethodIdentifier()) {
             case 'EnviarBusinessPartner':
@@ -104,10 +105,10 @@ class SAPBridge implements BridgeInterface
     }
 
     /**
-     * @param RequestInterface $request
+     * @param SearchRequestInterface $request
      * @return null
      */
-    public function search(RequestInterface $request)
+    public function search(SearchRequestInterface $request)
     {
         return null;
     }
@@ -163,7 +164,10 @@ class SAPBridge implements BridgeInterface
             $dados['dados_cliente']['cliente'] = 'true';
         }
 
-        return ['dados' => [$dados]];
+        return [
+            'header' => ['id_sistema' => $businessPartner->origem],
+            'dados' => [$dados]
+        ];
     }
 
     /**
