@@ -1,2 +1,2 @@
-# rovereti-bridge
-Bridge to integrate with Rovereti ERP
+# sap-bridge
+Bridge to integrate with SAP
