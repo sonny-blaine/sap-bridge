@@ -160,6 +160,7 @@ class SAPBridge implements BridgeInterface
 
         if ($this->isFornecedor($businessPartner->documentoTipo)) {
             $dados['dados_fornecedor']['fornecedor'] = 'true';
+            $dados['dados_cliente']['cliente'] = 'true';
         } else {
             $dados['dados_cliente']['cliente'] = 'true';
         }

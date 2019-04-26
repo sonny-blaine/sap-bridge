@@ -380,16 +380,16 @@
         },
         {
             "name": "sonny-blaine/integrator-bridge",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonny-blaine/integrator-bridge.git",
-                "reference": "0536387f67ec67c0e988e2baa8ccd90ce78cbe16"
+                "reference": "5f55b13210a3ba602afc3b0db1087a894c176c85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonny-blaine/integrator-bridge/zipball/0536387f67ec67c0e988e2baa8ccd90ce78cbe16",
-                "reference": "0536387f67ec67c0e988e2baa8ccd90ce78cbe16",
+                "url": "https://api.github.com/repos/sonny-blaine/integrator-bridge/zipball/5f55b13210a3ba602afc3b0db1087a894c176c85",
+                "reference": "5f55b13210a3ba602afc3b0db1087a894c176c85",
                 "shasum": ""
             },
             "require": {
@@ -412,7 +412,7 @@
                 }
             ],
             "description": "Bridge to integrate",
-            "time": "2017-06-21T12:38:54+00:00"
+            "time": "2019-04-24T18:38:18+00:00"
         }
     ],
     "packages-dev": [],
