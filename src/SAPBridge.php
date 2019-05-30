@@ -125,7 +125,7 @@ class SAPBridge implements BridgeInterface
                 'bpext' => $businessPartner->codigo,
                 'kunnr' => '',
                 'name_org' => $businessPartner->nome,
-                'name_org4' => $this->isFornecedor($businessPartner->documentoTipo) ? $businessPartner->nomeTratamento : '',
+                'name_org4' => $this->isCnpj($businessPartner->documentoTipo) ? $businessPartner->nomeTratamento : '',
                 'sort1' => $businessPartner->documentoNumero,
                 'sort2' => $businessPartner->nomeTratamento,
                 'street' => $businessPartner->enderecoLogradouro,
@@ -158,7 +158,7 @@ class SAPBridge implements BridgeInterface
             ];
         }
 
-        if ($this->isFornecedor($businessPartner->documentoTipo)) {
+        if ($this->isFornecedor($businessPartner)) {
             $dados['dados_fornecedor']['fornecedor'] = 'true';
             $dados['dados_cliente']['cliente'] = 'true';
         } else {
@@ -172,10 +172,19 @@ class SAPBridge implements BridgeInterface
     }
 
     /**
+     * @param \stdClass $businessPartner
+     * @return bool
+     */
+    private function isFornecedor(\stdClass $businessPartner)
+    {
+        return $this->isCnpj($businessPartner->documentoTipo) || $businessPartner->fornecedor;
+    }
+
+    /**
      * @param string $documentoTipo
      * @return bool
      */
-    private function isFornecedor(string $documentoTipo)
+    private function isCnpj(string $documentoTipo)
     {
         return 'CNPJ' === $documentoTipo;
     }
